@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء تقرير جديد - نظام تقييم الآلات والمعدات</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Flatpickr للتواريخ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                <span>نظام التقييم</span>
+            </a>
+            
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="new-report.html" class="nav-link active"><i class="fas fa-plus-circle"></i> تقرير جديد</a></li>
+                <li><a href="reports.html" class="nav-link"><i class="fas fa-folder-open"></i> التقارير</a></li>
+                <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
+            
+            <button class="theme-toggle" id="themeToggle" title="تبديل الوضع الليلي">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Nav Overlay for Mobile -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Page Header -->
+    <div class="page-content">
+        <div class="page-header">
+            <div class="container">
+                <div class="page-title">
+                    <h1><i class="fas fa-plus-circle"></i> إنشاء تقرير جديد</h1>
+                    <p>قم بملء البيانات التالية لإنشاء تقرير تقييم احترافي</p>
+                </div>
+                <nav class="breadcrumb">
+                    <a href="index.html">الرئيسية</a>
+                    <i class="fas fa-chevron-left"></i>
+                    <span>تقرير جديد</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- شريط التقدم -->
+            <div class="progress-container">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <span class="step-label">نوع التقييم</span>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <span class="step-label">معلومات المشروع</span>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <span class="step-label">معلومات العميل</span>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <span class="step-label">تفاصيل الآلات</span>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <span class="step-label">التقييم والقيمة</span>
+                    </div>
+                    <div class="progress-step" data-step="6">
+                        <div class="step-number">6</div>
+                        <span class="step-label">المراجعة</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج التقرير -->
+            <form id="reportForm">
+                <!-- القسم الأول: نوع التقييم -->
+                <div class="form-step" data-step="1">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-list-alt"></i>
+                            <h3>اختيار نوع التقييم</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="choice-cards" id="evaluationTypeCards">
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="sale" required>
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-tags"></i>
+                                    </div>
+                                    <h4>تقييم لأغراض البيع</h4>
+                                    <p>تقدير القيمة السوقية العادلة</p>
+                                </label>
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="insurance">
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <h4>تقييم لأغراض التأمين</h4>
+                                    <p>تحديد قيمة التغطية التأمينية</p>
+                                </label>
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="bank">
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <h4>تقييم للتمويل البنكي</h4>
+                                    <p>للحصول على التمويل والقروض</p>
+                                </label>
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="guarantee">
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <h4>تقييم للضمان</h4>
+                                    <p>ضمانات للعقود والالتزامات</p>
+                                </label>
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="accounting">
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <h4>تقييم لأغراض المحاسبة</h4>
+                                    <p>القيمة الدفترية والاستهلاك</p>
+                                </label>
+                                <label class="choice-card">
+                                    <input type="radio" name="evaluationType" value="other">
+                                    <div class="choice-card-icon">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </div>
+                                    <h4>أغراض أخرى</h4>
+                                    <p>تقييم مخصص حسب الطلب</p>
+                                </label>
+                            </div>
+                            
+                            <!-- حقل إضافي لنوع آخر -->
+                            <div class="form-group mt-3" id="otherTypeGroup" style="display: none;">
+                                <label class="form-label">
+                                    حدد الغرض من التقييم
+                                    <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="otherType" placeholder="اكتب الغرض من التقييم...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- القسم الثاني: معلومات المشروع -->
+                <div class="form-step" data-step="2" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-project-diagram"></i>
+                            <h3>معلومات المشروع</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        رقم المشروع
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="projectNumber" required
+                                           placeholder="مثال: PRJ-2026-001">
+                                    <span class="form-text">يمكنك تركه ليتم توليده تلقائياً</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        تاريخ التقييم
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control datepicker" id="evaluationDate" required
+                                               placeholder="اختر التاريخ">
+                                        <span class="input-group-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        اسم المقيّم
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="evaluatorName" required
+                                           placeholder="اسم المقيّم المعتمد">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        الجهة الطالبة للتقييم
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="requestingEntity" required
+                                           placeholder="اسم الجهة أو المؤسسة">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- القسم الثالث: معلومات العميل -->
+                <div class="form-step" data-step="3" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-user-tie"></i>
+                            <h3>معلومات العميل</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        اسم العميل
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="clientName" required
+                                           placeholder="الاسم الكامل للعميل">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        رقم الهوية / السجل التجاري
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="clientId" required
+                                           placeholder="رقم الهوية أو السجل التجاري">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        رقم الجوال
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="tel" class="form-control" id="clientPhone" required
+                                               placeholder="05xxxxxxxx" pattern="[0-9]{10}">
+                                        <span class="input-group-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </span>
+                                    </div>
+                                    <span class="form-error">يرجى إدخال رقم جوال صحيح</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        البريد الإلكتروني
+                                        <span class="optional">(اختياري)</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" id="clientEmail"
+                                               placeholder="example@email.com">
+                                        <span class="input-group-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        المدينة
+                                        <span class="required">*</span>
+                                    </label>
+                                    <select class="form-control" id="clientCity" required>
+                                        <option value="">اختر المدينة</option>
+                                        <option value="الرياض">الرياض</option>
+                                        <option value="جدة">جدة</option>
+                                        <option value="مكة المكرمة">مكة المكرمة</option>
+                                        <option value="المدينة المنورة">المدينة المنورة</option>
+                                        <option value="الدمام">الدمام</option>
+                                        <option value="الخبر">الخبر</option>
+                                        <option value="الطائف">الطائف</option>
+                                        <option value="تبوك">تبوك</option>
+                                        <option value="بريدة">بريدة</option>
+                                        <option value="خميس مشيط">خميس مشيط</option>
+                                        <option value="أبها">أبها</option>
+                                        <option value="حائل">حائل</option>
+                                        <option value="نجران">نجران</option>
+                                        <option value="جازان">جازان</option>
+                                        <option value="ينبع">ينبع</option>
+                                        <option value="الجبيل">الجبيل</option>
+                                        <option value="أخرى">أخرى</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        العنوان التفصيلي
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="clientAddress" required
+                                           placeholder="الحي، الشارع، رقم المبنى">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- القسم الرابع: تفاصيل الآلات -->
+                <div class="form-step" data-step="4" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-truck-loading"></i>
+                            <h3>تفاصيل الآلات والمعدات</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="machines-container" id="machinesContainer">
+                                <!-- سيتم إضافة الآلات ديناميكياً -->
+                            </div>
+                            
+                            <button type="button" class="add-machine-btn" id="addMachineBtn">
+                                <i class="fas fa-plus-circle"></i>
+                                إضافة آلة / معدة جديدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- القسم الخامس: التقييم والقيمة -->
+                <div class="form-step" data-step="5" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>تقييم القيمة</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        طريقة التقييم
+                                        <span class="required">*</span>
+                                    </label>
+                                    <select class="form-control" id="valuationMethod" required>
+                                        <option value="">اختر طريقة التقييم</option>
+                                        <option value="market">القيمة السوقية</option>
+                                        <option value="book">القيمة الدفترية</option>
+                                        <option value="replacement">قيمة الاستبدال</option>
+                                        <option value="liquidation">قيمة التصفية</option>
+                                        <option value="income">طريقة الدخل</option>
+                                        <option value="cost">طريقة التكلفة</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        العملة
+                                        <span class="required">*</span>
+                                    </label>
+                                    <select class="form-control" id="currency" required>
+                                        <option value="SAR">ريال سعودي (SAR)</option>
+                                        <option value="USD">دولار أمريكي (USD)</option>
+                                        <option value="EUR">يورو (EUR)</option>
+                                        <option value="AED">درهم إماراتي (AED)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- ملخص القيم -->
+                            <div class="form-group">
+                                <label class="form-label">ملخص القيم المقدرة</label>
+                                <div class="value-display" id="totalValueDisplay">
+                                    <div class="in-numbers">0.00 <span id="currencySymbol">ر.س</span></div>
+                                    <div class="in-words" id="valueInWords">صفر ريال سعودي فقط لا غير</div>
+                                </div>
+                                <span class="form-text">يتم احتساب الإجمالي تلقائياً من مجموع قيم الآلات</span>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                                    أساس التقييم
+                                    <span class="required">*</span>
+                                </label>
+                                <textarea class="form-control" id="valuationBasis" rows="4" required
+                                          placeholder="اشرح الأساس والمنهجية المستخدمة في التقييم..."></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                                    التوصيات
+                                    <span class="optional">(اختياري)</span>
+                                </label>
+                                <textarea class="form-control" id="recommendations" rows="4"
+                                          placeholder="أي توصيات أو ملاحظات إضافية..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- المرفقات الإضافية -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-paperclip"></i>
+                            <h3>مرفقات إضافية</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <label class="file-upload" id="additionalFilesUpload">
+                                <input type="file" id="additionalFiles" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="file-upload-text">
+                                    <h4>اسحب الملفات هنا أو انقر للاختيار</h4>
+                                    <p>PDF, Word, صور (الحد الأقصى 5MB لكل ملف)</p>
+                                </div>
+                            </label>
+                            <div class="uploaded-files-list" id="uploadedFilesList"></div>
+                            
+                            <div class="form-group full-width mt-3">
+                                <label class="form-label">
+                                    ملاحظات عامة
+                                    <span class="optional">(اختياري)</span>
+                                </label>
+                                <textarea class="form-control" id="generalNotes" rows="3"
+                                          placeholder="أي ملاحظات عامة تود إضافتها للتقرير..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- القسم السادس: المراجعة -->
+                <div class="form-step" data-step="6" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h3>مراجعة البيانات</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div id="reviewContent">
+                                <!-- سيتم ملؤها بواسطة JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم -->
+                <div class="form-actions">
+                    <div class="auto-save-status" id="autoSaveStatus">
+                        <i class="fas fa-save"></i>
+                        <span>الحفظ التلقائي مفعّل</span>
+                    </div>
+                    <div class="form-actions-right">
+                        <button type="button" class="btn btn-outline" id="prevBtn" style="display: none;">
+                            <i class="fas fa-arrow-right"></i>
+                            السابق
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="saveDraftBtn">
+                            <i class="fas fa-save"></i>
+                            حفظ كمسودة
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">
+                            التالي
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" id="previewBtn" style="display: none;">
+                            <i class="fas fa-eye"></i>
+                            معاينة التقرير
+                        </button>
+                        <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                            <i class="fas fa-file-pdf"></i>
+                            إنشاء التقرير
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 نظام تقييم الآلات والمعدات - جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- قالب الآلة -->
+    <template id="machineTemplate">
+        <div class="machine-item open" data-machine-index="">
+            <div class="machine-header">
+                <div class="machine-header-info">
+                    <div class="machine-number"></div>
+                    <span class="machine-title">آلة / معدة جديدة</span>
+                </div>
+                <div class="machine-actions">
+                    <button type="button" class="btn btn-icon btn-sm toggle-machine" title="طي/توسيع">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-sm delete-machine" title="حذف">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="machine-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            نوع الآلة/المعدة
+                            <span class="required">*</span>
+                        </label>
+                        <select class="form-control machine-type" required>
+                            <option value="">اختر النوع</option>
+                            <option value="رافعة">رافعة</option>
+                            <option value="حفار">حفار</option>
+                            <option value="شاحنة">شاحنة</option>
+                            <option value="لودر">لودر</option>
+                            <option value="بلدوزر">بلدوزر</option>
+                            <option value="رافعة شوكية">رافعة شوكية</option>
+                            <option value="كمبروسر">كمبروسر</option>
+                            <option value="مولد كهربائي">مولد كهربائي</option>
+                            <option value="معدة صناعية">معدة صناعية</option>
+                            <option value="معدة زراعية">معدة زراعية</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            اسم/وصف الآلة
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control machine-name" required
+                               placeholder="مثال: حفار كاتربيلر 320">
+                    </div>
+                </div>
+                <div class="form-row cols-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            الموديل
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control machine-model" required
+                               placeholder="رقم الموديل">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            رقم الهيكل/Serial
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control machine-serial" required
+                               placeholder="الرقم التسلسلي">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            سنة الصنع
+                            <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-control machine-year" required
+                               min="1950" max="2030" placeholder="2020">
+                    </div>
+                </div>
+                <div class="form-row cols-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            بلد المنشأ
+                            <span class="required">*</span>
+                        </label>
+                        <select class="form-control machine-country" required>
+                            <option value="">اختر البلد</option>
+                            <option value="اليابان">اليابان</option>
+                            <option value="الولايات المتحدة">الولايات المتحدة</option>
+                            <option value="ألمانيا">ألمانيا</option>
+                            <option value="الصين">الصين</option>
+                            <option value="كوريا الجنوبية">كوريا الجنوبية</option>
+                            <option value="السويد">السويد</option>
+                            <option value="إيطاليا">إيطاليا</option>
+                            <option value="بريطانيا">بريطانيا</option>
+                            <option value="فرنسا">فرنسا</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            الشركة المصنعة
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control machine-manufacturer" required
+                               placeholder="مثال: Caterpillar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            الموقع الحالي
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control machine-location" required
+                               placeholder="موقع الآلة">
+                    </div>
+                </div>
+                
+                <!-- الحالة العامة -->
+                <div class="form-group">
+                    <label class="form-label">
+                        الحالة العامة
+                        <span class="required">*</span>
+                    </label>
+                    <div class="condition-selector">
+                        <label class="condition-option excellent">
+                            <input type="radio" name="" value="excellent"> ممتازة
+                        </label>
+                        <label class="condition-option good">
+                            <input type="radio" name="" value="very_good"> جيدة جداً
+                        </label>
+                        <label class="condition-option fair">
+                            <input type="radio" name="" value="good"> جيدة
+                        </label>
+                        <label class="condition-option poor">
+                            <input type="radio" name="" value="acceptable"> مقبولة
+                        </label>
+                        <label class="condition-option bad">
+                            <input type="radio" name="" value="poor"> رديئة
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-row cols-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            ساعات التشغيل / المسافة
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control machine-hours" 
+                                   placeholder="0" min="0">
+                            <span class="input-group-addon">
+                                <select class="machine-hours-unit" style="border:none; background:transparent;">
+                                    <option value="hours">ساعة</option>
+                                    <option value="km">كم</option>
+                                    <option value="miles">ميل</option>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            الاستخدام الحالي
+                            <span class="required">*</span>
+                        </label>
+                        <select class="form-control machine-usage" required>
+                            <option value="">اختر</option>
+                            <option value="active">نشط</option>
+                            <option value="stopped">متوقف</option>
+                            <option value="maintenance">قيد الصيانة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            القيمة المقدرة
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control machine-value" required
+                                   placeholder="0" min="0" step="0.01">
+                            <span class="input-group-addon">ر.س</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ملاحظات فنية</label>
+                    <textarea class="form-control machine-notes" rows="3"
+                              placeholder="أي ملاحظات فنية عن حالة الآلة..."></textarea>
+                </div>
+                
+                <!-- رفع الصور -->
+                <div class="form-group">
+                    <label class="form-label">
+                        صور الآلة
+                        <span class="optional">(حتى 10 صور)</span>
+                    </label>
+                    <label class="file-upload machine-images-upload">
+                        <input type="file" class="machine-images-input" multiple accept="image/*">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            <h4>اسحب الصور هنا أو انقر للاختيار</h4>
+                            <p>JPG, PNG (الحد الأقصى 5MB لكل صورة)</p>
+                        </div>
+                    </label>
+                    <div class="image-preview-grid machine-images-preview"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api-storage.js"></script>
+    <script src="js/templates-manager.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/form-handler.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

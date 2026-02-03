@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير السابقة - نظام تقييم الآلات والمعدات</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                <span>نظام التقييم</span>
+            </a>
+            
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="new-report.html" class="nav-link"><i class="fas fa-plus-circle"></i> تقرير جديد</a></li>
+                <li><a href="reports.html" class="nav-link active"><i class="fas fa-folder-open"></i> التقارير</a></li>
+                <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
+            
+            <button class="theme-toggle" id="themeToggle" title="تبديل الوضع الليلي">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Nav Overlay for Mobile -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        <div class="page-header">
+            <div class="container">
+                <div class="page-title">
+                    <h1><i class="fas fa-folder-open"></i> التقارير السابقة</h1>
+                    <p>استعرض وأدر جميع تقارير التقييم</p>
+                </div>
+                <nav class="breadcrumb">
+                    <a href="index.html">الرئيسية</a>
+                    <i class="fas fa-chevron-left"></i>
+                    <span>التقارير</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- الفلاتر -->
+            <div class="reports-filters">
+                <div class="filters-row">
+                    <div class="form-group search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="بحث بالرقم، اسم العميل...">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="filterType">
+                            <option value="">جميع الأنواع</option>
+                            <option value="sale">تقييم للبيع</option>
+                            <option value="insurance">تقييم للتأمين</option>
+                            <option value="bank">تقييم للتمويل</option>
+                            <option value="guarantee">تقييم للضمان</option>
+                            <option value="accounting">تقييم محاسبي</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="filterStatus">
+                            <option value="">جميع الحالات</option>
+                            <option value="completed">مكتمل</option>
+                            <option value="draft">مسودة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control datepicker-range" id="filterDate" 
+                               placeholder="اختر الفترة">
+                    </div>
+                    <button class="btn btn-primary" id="applyFilters">
+                        <i class="fas fa-filter"></i>
+                        تطبيق
+                    </button>
+                </div>
+            </div>
+
+            <!-- إحصائيات سريعة -->
+            <div class="stats-grid mb-4" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCount">0</h3>
+                        <p>إجمالي التقارير</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completedCount">0</h3>
+                        <p>مكتمل</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon draft">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="draftCount">0</h3>
+                        <p>مسودة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon recent">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalValue">0</h3>
+                        <p>إجمالي القيم</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات -->
+            <div class="d-flex justify-between align-center mb-3">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline btn-sm" id="selectAllBtn">
+                        <i class="fas fa-check-square"></i>
+                        تحديد الكل
+                    </button>
+                    <button class="btn btn-danger btn-sm" id="deleteSelectedBtn" disabled>
+                        <i class="fas fa-trash"></i>
+                        حذف المحدد
+                    </button>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary btn-sm" id="exportExcelBtn">
+                        <i class="fas fa-file-excel"></i>
+                        تصدير Excel
+                    </button>
+                    <a href="new-report.html" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i>
+                        تقرير جديد
+                    </a>
+                </div>
+            </div>
+
+            <!-- قائمة التقارير - عرض Desktop -->
+            <div class="reports-list reports-desktop-view">
+                <div class="report-item reports-header">
+                    <div><input type="checkbox" id="selectAllCheckbox"></div>
+                    <div>رقم التقرير</div>
+                    <div>العميل</div>
+                    <div>نوع التقييم</div>
+                    <div>التاريخ</div>
+                    <div>الحالة</div>
+                    <div>الإجراءات</div>
+                </div>
+                <div id="reportsListDesktop">
+                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <!-- قائمة التقارير - عرض Mobile -->
+            <div class="reports-mobile-view" id="reportsListMobile" style="display: none;">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+
+            <!-- حالة فارغة -->
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-inbox"></i>
+                <h3>لا توجد تقارير</h3>
+                <p>لم يتم العثور على أي تقارير مطابقة للبحث</p>
+                <a href="new-report.html" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i>
+                    إنشاء تقرير جديد
+                </a>
+            </div>
+
+            <!-- التصفح -->
+            <div class="pagination" id="pagination">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 نظام تقييم الآلات والمعدات - جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal تأكيد الحذف -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle text-warning"></i> تأكيد الحذف</h3>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف التقرير رقم <strong id="deleteReportNumber"></strong>؟</p>
+                <p class="text-muted">هذا الإجراء لا يمكن التراجع عنه.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDelete">إلغاء</button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i>
+                    حذف
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // تهيئة صفحة التقارير
+        document.addEventListener('DOMContentLoaded', function() {
+            initReportsPage();
+        });
+        
+        function initReportsPage() {
+            // تحميل التقارير
+            loadReports();
+            
+            // تهيئة الفلاتر
+            initFilters();
+            
+            // تهيئة أحداث الصفحة
+            initReportsEvents();
+            
+            // فحص المعلمات في URL
+            checkUrlParams();
+        }
+        
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('status');
+            if (status) {
+                document.getElementById('filterStatus').value = status;
+                loadReports();
+            }
+        }
+        
+        function initFilters() {
+            // تهيئة اختيار التاريخ
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr('#filterDate', {
+                    mode: 'range',
+                    dateFormat: 'Y-m-d',
+                    locale: 'ar'
+                });
+            }
+        }
+        
+        function initReportsEvents() {
+            // البحث
+            document.getElementById('searchInput').addEventListener('input', debounce(loadReports, 300));
+            
+            // الفلاتر
+            document.getElementById('filterType').addEventListener('change', loadReports);
+            document.getElementById('filterStatus').addEventListener('change', loadReports);
+            document.getElementById('applyFilters').addEventListener('click', loadReports);
+            
+            // تحديد الكل
+            document.getElementById('selectAllBtn').addEventListener('click', toggleSelectAll);
+            document.getElementById('selectAllCheckbox').addEventListener('change', toggleSelectAll);
+            
+            // حذف المحدد
+            document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
+            
+            // تصدير Excel
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+            
+            // Modal الحذف
+            document.getElementById('closeDeleteModal').addEventListener('click', closeDeleteModal);
+            document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
+        }
+        
+        function loadReports() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('filterType').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            
+            let reports = Storage.getReports() || [];
+            
+            // تطبيق الفلاتر
+            reports = reports.filter(report => {
+                const matchSearch = !search || 
+                    report.projectNumber?.toLowerCase().includes(search) ||
+                    report.clientName?.toLowerCase().includes(search);
+                const matchType = !typeFilter || report.evaluationType === typeFilter;
+                const matchStatus = !statusFilter || report.status === statusFilter;
+                
+                return matchSearch && matchType && matchStatus;
+            });
+            
+            // تحديث الإحصائيات
+            updateStats(reports);
+            
+            // عرض التقارير
+            renderReports(reports);
+        }
+        
+        function updateStats(reports) {
+            const allReports = Storage.getReports() || [];
+            const completed = allReports.filter(r => r.status === 'completed').length;
+            const drafts = allReports.filter(r => r.status === 'draft').length;
+            const totalValue = allReports.reduce((sum, r) => sum + (parseFloat(r.totalValue) || 0), 0);
+            
+            document.getElementById('totalCount').textContent = allReports.length;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('draftCount').textContent = drafts;
+            document.getElementById('totalValue').textContent = Utils.formatCurrency(totalValue);
+        }
+        
+        function renderReports(reports) {
+            const desktopList = document.getElementById('reportsListDesktop');
+            const mobileList = document.getElementById('reportsListMobile');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (reports.length === 0) {
+                desktopList.innerHTML = '';
+                mobileList.innerHTML = '';
+                emptyState.classList.add('show');
+                return;
+            }
+            
+            emptyState.classList.remove('show');
+            
+            // Desktop view
+            desktopList.innerHTML = reports.map(report => `
+                <div class="report-item" data-id="${report.id}">
+                    <div><input type="checkbox" class="report-checkbox" data-id="${report.id}"></div>
+                    <div class="report-number">${report.projectNumber || 'غير محدد'}</div>
+                    <div class="report-client">
+                        <span class="name">${report.clientName || 'غير محدد'}</span>
+                        <span class="id">${report.clientId || ''}</span>
+                    </div>
+                    <div>${Utils.getEvaluationTypeName(report.evaluationType)}</div>
+                    <div>${Utils.formatDate(report.evaluationDate)}</div>
+                    <div>
+                        <span class="status-badge ${report.status}">
+                            <i class="fas fa-${report.status === 'completed' ? 'check-circle' : 'edit'}"></i>
+                            ${report.status === 'completed' ? 'مكتمل' : 'مسودة'}
+                        </span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-icon btn-sm" onclick="viewReport('${report.id}')" title="عرض">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-icon btn-sm" onclick="editReport('${report.id}')" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-icon btn-sm" onclick="exportPDF('${report.id}')" title="تصدير PDF">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button class="btn btn-icon btn-sm delete" onclick="confirmDelete('${report.id}')" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Mobile view
+            mobileList.innerHTML = reports.map(report => `
+                <div class="report-card" data-id="${report.id}">
+                    <div class="report-card-header">
+                        <div>
+                            <strong class="report-number">${report.projectNumber || 'غير محدد'}</strong>
+                            <span class="status-badge ${report.status}">
+                                ${report.status === 'completed' ? 'مكتمل' : 'مسودة'}
+                            </span>
+                        </div>
+                        <input type="checkbox" class="report-checkbox" data-id="${report.id}">
+                    </div>
+                    <div class="report-card-body">
+                        <div class="report-card-row">
+                            <span class="label">العميل:</span>
+                            <span>${report.clientName || 'غير محدد'}</span>
+                        </div>
+                        <div class="report-card-row">
+                            <span class="label">النوع:</span>
+                            <span>${Utils.getEvaluationTypeName(report.evaluationType)}</span>
+                        </div>
+                        <div class="report-card-row">
+                            <span class="label">التاريخ:</span>
+                            <span>${Utils.formatDate(report.evaluationDate)}</span>
+                        </div>
+                    </div>
+                    <div class="report-card-actions">
+                        <button class="btn btn-outline btn-sm" onclick="viewReport('${report.id}')">
+                            <i class="fas fa-eye"></i> عرض
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="editReport('${report.id}')">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${report.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // تحديث حالة زر الحذف
+            updateDeleteButtonState();
+        }
+        
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('.report-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const isChecked = selectAllCheckbox.checked;
+            
+            checkboxes.forEach(cb => cb.checked = isChecked);
+            updateDeleteButtonState();
+        }
+        
+        function updateDeleteButtonState() {
+            const selected = document.querySelectorAll('.report-checkbox:checked').length;
+            document.getElementById('deleteSelectedBtn').disabled = selected === 0;
+        }
+        
+        function deleteSelected() {
+            const selectedIds = Array.from(document.querySelectorAll('.report-checkbox:checked'))
+                .map(cb => cb.dataset.id);
+            
+            if (selectedIds.length === 0) return;
+            
+            Swal.fire({
+                title: 'تأكيد الحذف',
+                text: `هل أنت متأكد من حذف ${selectedIds.length} تقرير؟`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    selectedIds.forEach(id => Storage.deleteReport(id));
+                    loadReports();
+                    Swal.fire('تم الحذف!', 'تم حذف التقارير المحددة بنجاح.', 'success');
+                }
+            });
+        }
+        
+        let reportToDelete = null;
+        
+        function confirmDelete(id) {
+            reportToDelete = id;
+            const report = Storage.getReport(id);
+            document.getElementById('deleteReportNumber').textContent = report?.projectNumber || id;
+            document.getElementById('deleteModal').classList.add('show');
+            
+            document.getElementById('confirmDelete').onclick = function() {
+                Storage.deleteReport(reportToDelete);
+                closeDeleteModal();
+                loadReports();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم الحذف',
+                    text: 'تم حذف التقرير بنجاح',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            };
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            reportToDelete = null;
+        }
+        
+        function viewReport(id) {
+            window.location.href = `preview.html?id=${id}`;
+        }
+        
+        function editReport(id) {
+            window.location.href = `new-report.html?edit=${id}`;
+        }
+        
+        function exportPDF(id) {
+            window.location.href = `preview.html?id=${id}&export=true`;
+        }
+        
+        function exportToExcel() {
+            const reports = Storage.getReports() || [];
+            
+            if (reports.length === 0) {
+                Swal.fire('لا توجد بيانات', 'لا توجد تقارير للتصدير', 'info');
+                return;
+            }
+            
+            // تحويل البيانات لصيغة CSV
+            const headers = ['رقم التقرير', 'اسم العميل', 'رقم الهوية', 'نوع التقييم', 'التاريخ', 'الحالة', 'القيمة الإجمالية'];
+            const rows = reports.map(r => [
+                r.projectNumber || '',
+                r.clientName || '',
+                r.clientId || '',
+                Utils.getEvaluationTypeName(r.evaluationType),
+                r.evaluationDate || '',
+                r.status === 'completed' ? 'مكتمل' : 'مسودة',
+                r.totalValue || 0
+            ]);
+            
+            let csvContent = '\uFEFF'; // BOM for UTF-8
+            csvContent += headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `تقارير_التقييم_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'تم التصدير',
+                text: 'تم تصدير التقارير بنجاح',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // تحديث عند تغيير checkbox
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('report-checkbox')) {
+                updateDeleteButtonState();
+            }
+        });
+    </script>
+</body>
+</html>
