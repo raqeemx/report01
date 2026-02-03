@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تقييم الآلات والمعدات</title>
+    
+    <!-- Google Fonts - Arabic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-cogs"></i>
+                <span>نظام التقييم</span>
+            </a>
+            
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="new-report.html" class="nav-link"><i class="fas fa-plus-circle"></i> تقرير جديد</a></li>
+                <li><a href="reports.html" class="nav-link"><i class="fas fa-folder-open"></i> التقارير</a></li>
+                <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
+            
+            <button class="theme-toggle" id="themeToggle" title="تبديل الوضع الليلي">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>نظام إدارة وتوليد تقارير تقييم الآلات والمعدات</h1>
+                <p>أتمتة عملية إنشاء تقارير التقييم الاحترافية مع إمكانية التصدير إلى PDF</p>
+                <div class="hero-buttons">
+                    <a href="new-report.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus-circle"></i>
+                        إنشاء تقرير جديد
+                    </a>
+                    <a href="reports.html" class="btn btn-outline btn-lg">
+                        <i class="fas fa-folder-open"></i>
+                        عرض التقارير
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics">
+        <div class="container">
+            <div class="section-header">
+                <h2>إحصائيات سريعة</h2>
+                <p>نظرة عامة على أداء النظام</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalReports">0</h3>
+                        <p>إجمالي التقارير</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completedReports">0</h3>
+                        <p>تقارير مكتملة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon draft">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="draftReports">0</h3>
+                        <p>مسودات</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon recent">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="lastReport">-</h3>
+                        <p>آخر تقييم</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>خدمات التقييم المتاحة</h2>
+                <p>اختر نوع التقييم المناسب لاحتياجاتك</p>
+            </div>
+            <div class="services-grid">
+                <a href="new-report.html?type=sale" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3>تقييم لأغراض البيع</h3>
+                    <p>تقدير القيمة السوقية العادلة للآلات والمعدات لعمليات البيع والشراء</p>
+                </a>
+                <a href="new-report.html?type=insurance" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>تقييم لأغراض التأمين</h3>
+                    <p>تحديد قيمة التغطية التأمينية المناسبة للآلات والمعدات</p>
+                </a>
+                <a href="new-report.html?type=bank" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>تقييم للتمويل البنكي</h3>
+                    <p>تقارير تقييم معتمدة للحصول على التمويل والقروض البنكية</p>
+                </a>
+                <a href="new-report.html?type=guarantee" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>تقييم للضمان</h3>
+                    <p>تقييم الأصول كضمانات للعقود والالتزامات المالية</p>
+                </a>
+                <a href="new-report.html?type=accounting" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>تقييم لأغراض المحاسبة</h3>
+                    <p>تحديد القيمة الدفترية والاستهلاك للأغراض المحاسبية</p>
+                </a>
+                <a href="new-report.html?type=other" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <h3>أغراض أخرى</h3>
+                    <p>تقييمات مخصصة لأغراض متنوعة حسب طلب العميل</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions Section -->
+    <section class="quick-actions">
+        <div class="container">
+            <div class="section-header">
+                <h2>إجراءات سريعة</h2>
+                <p>وصول سريع للمهام الشائعة</p>
+            </div>
+            <div class="actions-grid">
+                <a href="new-report.html" class="action-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>تقرير جديد</span>
+                </a>
+                <a href="reports.html" class="action-card">
+                    <i class="fas fa-folder-open"></i>
+                    <span>التقارير السابقة</span>
+                </a>
+                <a href="reports.html?status=draft" class="action-card">
+                    <i class="fas fa-edit"></i>
+                    <span>المسودات</span>
+                </a>
+                <a href="settings.html" class="action-card">
+                    <i class="fas fa-building"></i>
+                    <span>إعدادات الشركة</span>
+                </a>
+                <button class="action-card" id="exportData">
+                    <i class="fas fa-download"></i>
+                    <span>تصدير البيانات</span>
+                </button>
+                <button class="action-card" id="importData">
+                    <i class="fas fa-upload"></i>
+                    <span>استيراد البيانات</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Reports Section -->
+    <section class="recent-reports">
+        <div class="container">
+            <div class="section-header">
+                <h2>أحدث التقارير</h2>
+                <a href="reports.html" class="view-all">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+            <div class="reports-table-container">
+                <table class="reports-table" id="recentReportsTable">
+                    <thead>
+                        <tr>
+                            <th>رقم التقرير</th>
+                            <th>اسم العميل</th>
+                            <th>نوع التقييم</th>
+                            <th>التاريخ</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentReportsBody">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-inbox"></i>
+                    <h3>لا توجد تقارير بعد</h3>
+                    <p>ابدأ بإنشاء تقريرك الأول</p>
+                    <a href="new-report.html" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>
+                        إنشاء تقرير جديد
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-cogs"></i>
+                    <span>نظام تقييم الآلات والمعدات</span>
+                </div>
+                <p>جميع البيانات محفوظة محلياً على جهازك ولا يتم إرسالها لأي خادم خارجي</p>
+                <div class="footer-links">
+                    <a href="index.html">الرئيسية</a>
+                    <a href="new-report.html">تقرير جديد</a>
+                    <a href="reports.html">التقارير</a>
+                    <a href="settings.html">الإعدادات</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 نظام تقييم الآلات والمعدات - جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Import Data Modal -->
+    <div class="modal" id="importModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>استيراد البيانات</h3>
+                <button class="modal-close" id="closeImportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="file-upload-zone" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>اسحب ملف JSON هنا أو</p>
+                    <label class="btn btn-secondary">
+                        <input type="file" id="importFile" accept=".json" hidden>
+                        اختر ملف
+                    </label>
+                </div>
+                <p class="text-muted">يرجى اختيار ملف JSON تم تصديره مسبقاً من النظام</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
