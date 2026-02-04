@@ -1,6 +1,7 @@
 /**
  * نظام تقييم الآلات والمعدات
  * ملف معالجة النماذج (Form Handler)
+ * تم إصلاح مشكلة التحقق من الحقول والانتقال بين الخطوات
  */
 
 const FormHandler = {
@@ -45,6 +46,8 @@ const FormHandler = {
         
         // تحميل المسودة إذا وجدت
         this.loadDraft();
+        
+        console.log('FormHandler initialized successfully');
     },
 
     /**
@@ -86,12 +89,22 @@ const FormHandler = {
      * الانتقال للخطوة التالية
      */
     nextStep: function() {
-        // التحقق من صحة الخطوة الحالية
         const currentStepElement = document.querySelector(`.form-step[data-step="${this.state.currentStep}"]`);
+        
+        if (!currentStepElement) {
+            console.error('Current step element not found');
+            return;
+        }
+        
+        // التحقق من صحة الخطوة الحالية
         const validation = Validation.validateStep(currentStepElement);
         
         if (!validation.valid) {
-            Utils.showToast('يرجى تعبئة جميع الحقول المطلوبة', 'error');
+            // عرض رسالة خطأ مفصلة
+            const errorMessages = Object.values(validation.errors).flat();
+            const errorMessage = errorMessages.length > 0 ? errorMessages[0] : 'يرجى تعبئة جميع الحقول المطلوبة';
+            Utils.showToast(errorMessage, 'error');
+            console.log('Validation failed:', validation.errors);
             return;
         }
         
@@ -99,9 +112,21 @@ const FormHandler = {
         this.collectStepData(this.state.currentStep);
         
         // التحقق من وجود آلة واحدة على الأقل في الخطوة 4
-        if (this.state.currentStep === 4 && this.state.machines.length === 0) {
-            Utils.showToast('يرجى إضافة آلة واحدة على الأقل', 'error');
-            return;
+        if (this.state.currentStep === 4) {
+            // جمع بيانات جميع الآلات أولاً
+            this.collectAllMachinesData();
+            
+            if (this.state.machines.length === 0) {
+                Utils.showToast('يرجى إضافة آلة واحدة على الأقل', 'error');
+                return;
+            }
+            
+            // التحقق من أن الآلة الأولى على الأقل لديها بيانات أساسية
+            const firstMachine = this.state.machines[0];
+            if (!firstMachine.name && !firstMachine.type) {
+                Utils.showToast('يرجى إدخال بيانات الآلة على الأقل', 'error');
+                return;
+            }
         }
         
         if (this.state.currentStep < this.state.totalSteps) {
@@ -112,6 +137,8 @@ const FormHandler = {
             if (this.state.currentStep === 6) {
                 this.showReviewContent();
             }
+            
+            console.log('Moved to step:', this.state.currentStep);
         }
     },
 
@@ -158,16 +185,16 @@ const FormHandler = {
         const previewBtn = document.getElementById('previewBtn');
         const submitBtn = document.getElementById('submitBtn');
         
-        prevBtn.style.display = this.state.currentStep > 1 ? 'inline-flex' : 'none';
+        if (prevBtn) prevBtn.style.display = this.state.currentStep > 1 ? 'inline-flex' : 'none';
         
         if (this.state.currentStep === this.state.totalSteps) {
-            nextBtn.style.display = 'none';
-            previewBtn.style.display = 'inline-flex';
-            submitBtn.style.display = 'inline-flex';
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (previewBtn) previewBtn.style.display = 'inline-flex';
+            if (submitBtn) submitBtn.style.display = 'inline-flex';
         } else {
-            nextBtn.style.display = 'inline-flex';
-            previewBtn.style.display = 'none';
-            submitBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'inline-flex';
+            if (previewBtn) previewBtn.style.display = 'none';
+            if (submitBtn) submitBtn.style.display = 'none';
         }
         
         // التمرير للأعلى
@@ -205,6 +232,7 @@ const FormHandler = {
                 
             case 4:
                 // الآلات تُجمع تلقائياً
+                this.collectAllMachinesData();
                 this.state.reportData.machines = this.state.machines;
                 break;
                 
@@ -220,6 +248,16 @@ const FormHandler = {
                     sum + (parseFloat(m.value) || 0), 0);
                 break;
         }
+    },
+    
+    /**
+     * جمع بيانات جميع الآلات
+     */
+    collectAllMachinesData: function() {
+        const machineItems = document.querySelectorAll('.machine-item');
+        machineItems.forEach((item, index) => {
+            this.collectMachineData(item, index);
+        });
     },
 
     /**

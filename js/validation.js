@@ -1,6 +1,7 @@
 /**
  * نظام تقييم الآلات والمعدات
  * ملف التحقق من المدخلات (Validation)
+ * تم إصلاح مشكلة التحقق من الحقول المطلوبة
  */
 
 const Validation = {
@@ -18,7 +19,8 @@ const Validation = {
         max: 'يجب أن تكون القيمة %s كحد أقصى',
         pattern: 'الصيغة غير صحيحة',
         fileSize: 'حجم الملف يجب أن يكون أقل من %s MB',
-        fileType: 'نوع الملف غير مسموح'
+        fileType: 'نوع الملف غير مسموح',
+        evaluationType: 'يرجى اختيار نوع التقييم'
     },
 
     /**
@@ -201,16 +203,53 @@ const Validation = {
     },
 
     /**
-     * التحقق من خطوة في النموذج
+     * التحقق من خطوة في النموذج - إصلاح المشكلة الرئيسية
      */
     validateStep: function(stepElement) {
-        const inputs = stepElement.querySelectorAll('input:not([type="hidden"]), select, textarea');
+        const stepNumber = parseInt(stepElement.dataset.step);
         const errors = {};
         let isValid = true;
+        
+        // معالجة خاصة للخطوة الأولى (نوع التقييم)
+        if (stepNumber === 1) {
+            const evaluationTypeInput = stepElement.querySelector('input[name="evaluationType"]:checked');
+            if (!evaluationTypeInput) {
+                isValid = false;
+                errors['evaluationType'] = [this.messages.evaluationType];
+                
+                // إضافة تأثير بصري على البطاقات
+                const cards = stepElement.querySelectorAll('.choice-card');
+                cards.forEach(card => card.classList.add('shake'));
+                setTimeout(() => {
+                    cards.forEach(card => card.classList.remove('shake'));
+                }, 500);
+                
+                return { valid: false, errors };
+            }
+            
+            // التحقق من حقل "أخرى" إذا كان مختاراً
+            if (evaluationTypeInput.value === 'other') {
+                const otherTypeInput = document.getElementById('otherType');
+                if (otherTypeInput && !otherTypeInput.value.trim()) {
+                    isValid = false;
+                    errors['otherType'] = ['يرجى تحديد الغرض من التقييم'];
+                    this.showFieldError(otherTypeInput, 'يرجى تحديد الغرض من التقييم');
+                    return { valid: false, errors };
+                }
+            }
+            
+            return { valid: true, errors: {} };
+        }
+        
+        // التحقق من الحقول العادية للخطوات الأخرى
+        const inputs = stepElement.querySelectorAll('input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]):not([type="file"]), select, textarea');
         
         inputs.forEach(input => {
             // تخطي الحقول المخفية أو المعطلة
             if (input.offsetParent === null || input.disabled) return;
+            
+            // تخطي الحقول الاختيارية
+            if (!input.required && !input.hasAttribute('data-required')) return;
             
             const result = this.validateField(input);
             
@@ -223,10 +262,42 @@ const Validation = {
             }
         });
         
+        // التحقق من radio buttons المطلوبة (غير نوع التقييم)
+        const radioGroups = this.getRadioGroups(stepElement);
+        radioGroups.forEach(group => {
+            if (group.required && !group.checked) {
+                isValid = false;
+                errors[group.name] = [this.messages.required];
+            }
+        });
+        
         return {
             valid: isValid,
             errors: errors
         };
+    },
+    
+    /**
+     * الحصول على مجموعات الراديو في عنصر
+     */
+    getRadioGroups: function(element) {
+        const groups = {};
+        const radios = element.querySelectorAll('input[type="radio"]');
+        
+        radios.forEach(radio => {
+            if (!groups[radio.name]) {
+                groups[radio.name] = {
+                    name: radio.name,
+                    required: radio.required,
+                    checked: false
+                };
+            }
+            if (radio.checked) {
+                groups[radio.name].checked = true;
+            }
+        });
+        
+        return Object.values(groups);
     },
 
     /**

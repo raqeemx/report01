@@ -1104,3 +1104,84 @@ select.form-control {
         break-inside: avoid;
     }
 }
+
+/* ========================================
+   16. تأثيرات إضافية
+   ======================================== */
+/* تأثير الاهتزاز للتنبيه */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* تأثير الخطأ على البطاقات */
+.choice-card.error {
+    border-color: var(--danger-color, #dc3545) !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+}
+
+/* تحسين مظهر الخطوة النشطة */
+.form-step {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تحسين أزرار النموذج */
+.form-actions {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-color);
+}
+
+/* مراجعة البيانات */
+.review-section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-color);
+    border-radius: var(--border-radius);
+}
+
+.review-section h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.review-section h4 i {
+    margin-left: var(--spacing-sm);
+}
+
+.review-machine {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-white);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-muted {
+    color: var(--text-secondary);
+}
+
+.text-primary {
+    color: var(--primary-color);
+    font-weight: 600;
+}
